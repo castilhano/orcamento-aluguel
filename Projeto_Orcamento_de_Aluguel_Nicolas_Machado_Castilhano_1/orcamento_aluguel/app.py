@@ -1,17 +1,7 @@
+
 """
-Orcamento de Aluguel - Imobiliaria R.M.
-Disciplina: Algorithmic Thinking and Introduction to Object-Oriented Programming
-
-Este arquivo e apenas a interface. Ele recebe o que o usuario digitou, monta os
-objetos e mostra o resultado na tela.
-
-Repare que nenhuma regra de negocio mora aqui. Nenhum valor de aluguel, nenhum
-percentual de desconto, nenhuma conta. Tudo isso esta nas classes da pasta
-modelos. Se a R.M. mudar o preco do apartamento amanha, este arquivo nao muda
-nem uma linha.
-
 Para rodar:
-    python app.py
+   python app.py
 Depois abra http://localhost:5000 no navegador.
 """
 

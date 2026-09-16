@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+{% block titulo %}Orcamento de {{ orcamento.cliente.nome }}{% endblock %}
+
+{% block conteudo %}
+
+<div class="cartao documento">
+
+  <header class="doc-topo">
+    <div>
+      <p class="doc-rotulo">Orcamento para</p>
+      <h1>{{ orcamento.cliente.nome }}</h1>
+      <p class="doc-data">Gerado em {{ orcamento.gerado_em }}</p>
+    </div>
+    <div class="doc-tipo">{{ orcamento.imovel.tipo }}</div>
+  </header>
+
+  <section class="itens">
+    {% for descricao, valor in orcamento.detalhar_itens() %}
+      <div class="item {{ 'item-desconto' if valor < 0 }}">
+        <span class="item-nome">{{ descricao }}</span>
+        <span class="item-valor">
+          {{ '- ' if valor < 0 }}R$ {{ valor|moeda }}
+        </span>
+      </div>
+    {% endfor %}
+  </section>
+
+  <section class="total">
+    <p class="total-rotulo">Aluguel mensal</p>
+    <p class="total-valor">R$ {{ orcamento.aluguel_mensal|moeda }}</p>
+    {% if orcamento.desconto > 0 %}
+      <p class="total-nota">Voce economizou R$ {{ orcamento.desconto|moeda }} por mes com o desconto para clientes sem criancas.</p>
+    {% endif %}
+  </section>
+
+  <section class="contrato">
+    <h2>Contrato imobiliario</h2>
+    <p>
+      R$ {{ orcamento.contrato.valor_total|moeda }} dividido em
+      <strong>{{ orcamento.contrato.parcelas }}x de
+      R$ {{ orcamento.contrato.valor_parcela|moeda }}</strong>,
+      cobrado junto com as primeiras mensalidades.
+    </p>
+
+    <div class="resumo-linhas">
+      <div>
+        <span>Primeiro mes</span>
+        <strong>R$ {{ orcamento.total_primeiro_mes|moeda }}</strong>
+      </div>
+      <div>
+        <span>Total em 12 meses</span>
+        <strong>R$ {{ orcamento.total_doze_meses|moeda }}</strong>
+      </div>
+    </div>
+  </section>
+
+  <section class="parcelas">
+    <h2>As 12 parcelas</h2>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Mes</th>
+          <th class="num">Aluguel</th>
+          <th class="num">Contrato</th>
+          <th class="num">Total do mes</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for linha in orcamento.montar_parcelas() %}
+        <tr class="{{ 'com-contrato' if linha['contrato'] > 0 }}">
+          <td>{{ linha['mes'] }}</td>
+          <td class="num">R$ {{ linha['aluguel']|moeda }}</td>
+          <td class="num {{ 'vazio' if linha['contrato'] == 0 }}">
+            {% if linha['contrato'] > 0 %}R$ {{ linha['contrato']|moeda }}{% else %}&mdash;{% endif %}
+          </td>
+          <td class="num forte">R$ {{ linha['total']|moeda }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </section>
+
+  <div class="acoes">
+    <form method="post" action="{{ url_for('baixar_csv') }}">
+      {% for chave, valor in dados.items() %}
+        <input type="hidden" name="{{ chave }}" value="{{ valor }}">
+      {% endfor %}
+      <button type="submit" class="botao botao-principal">Baixar as 12 parcelas em CSV</button>
+    </form>
+    <a href="{{ url_for('inicio') }}" class="botao">Fazer outro orcamento</a>
+  </div>
+
+</div>
+
+{% endblock %}

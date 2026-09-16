@@ -1,0 +1,149 @@
+{% extends "base.html" %}
+{% block titulo %}Gerar orcamento{% endblock %}
+
+{% block conteudo %}
+
+<div class="intro">
+  <h1>Monte o orcamento do seu aluguel</h1>
+  <p>Escolha o tipo de imovel e os opcionais. O valor aparece na hora, com o
+     contrato ja parcelado.</p>
+</div>
+
+{% if erro %}
+  <p class="aviso">{{ erro }}</p>
+{% endif %}
+
+<form method="post" class="cartao" id="formulario">
+
+  <section class="bloco">
+    <h2>Seus dados</h2>
+
+    <div class="campo">
+      <label for="nome">Nome do cliente</label>
+      <input type="text" id="nome" name="nome" required maxlength="80"
+             value="{{ dados['nome'] if dados else '' }}"
+             placeholder="Ex: Maria Souza">
+    </div>
+
+    <div class="campo">
+      <label>Voce tem criancas?</label>
+      <div class="escolha dupla">
+        <label class="opcao">
+          <input type="radio" name="criancas" value="nao"
+                 {{ 'checked' if not dados or dados.get('criancas') != 'sim' }}>
+          <span>Nao tenho</span>
+          <small>Garante 5% de desconto em apartamentos</small>
+        </label>
+        <label class="opcao">
+          <input type="radio" name="criancas" value="sim"
+                 {{ 'checked' if dados and dados.get('criancas') == 'sim' }}>
+          <span>Tenho</span>
+          <small>Sem desconto</small>
+        </label>
+      </div>
+    </div>
+  </section>
+
+  <section class="bloco">
+    <h2>Tipo de imovel</h2>
+
+    <div class="escolha tripla">
+      <label class="opcao opcao-imovel">
+        <input type="radio" name="tipo" value="apartamento" required
+               {{ 'checked' if not dados or dados.get('tipo') == 'apartamento' }}>
+        <span>Apartamento</span>
+        <small>a partir de R$ 700</small>
+      </label>
+      <label class="opcao opcao-imovel">
+        <input type="radio" name="tipo" value="casa"
+               {{ 'checked' if dados and dados.get('tipo') == 'casa' }}>
+        <span>Casa</span>
+        <small>a partir de R$ 900</small>
+      </label>
+      <label class="opcao opcao-imovel">
+        <input type="radio" name="tipo" value="estudio"
+               {{ 'checked' if dados and dados.get('tipo') == 'estudio' }}>
+        <span>Estudio</span>
+        <small>R$ 1.200</small>
+      </label>
+    </div>
+  </section>
+
+  <!-- Aparece somente para apartamento e casa -->
+  <section class="bloco" id="bloco-quartos">
+    <h2>Quartos e garagem</h2>
+
+    <div class="par">
+      <div class="campo">
+        <label for="quartos">Quantidade de quartos</label>
+        <select id="quartos" name="quartos">
+          <option value="1" {{ 'selected' if dados and dados.get('quartos') == '1' }}>1 quarto</option>
+          <option value="2" {{ 'selected' if dados and dados.get('quartos') == '2' }}>2 quartos</option>
+        </select>
+        <p class="ajuda">O segundo quarto soma R$ 200 no apartamento e R$ 250 na casa.</p>
+      </div>
+
+      <div class="campo">
+        <label for="garagem">Vaga de garagem</label>
+        <select id="garagem" name="garagem">
+          <option value="nao" {{ 'selected' if not dados or dados.get('garagem') != 'sim' }}>Sem garagem</option>
+          <option value="sim" {{ 'selected' if dados and dados.get('garagem') == 'sim' }}>Com garagem</option>
+        </select>
+        <p class="ajuda">Acrescenta R$ 300 na mensalidade.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Aparece somente para estudio -->
+  <section class="bloco" id="bloco-vagas">
+    <h2>Estacionamento</h2>
+
+    <div class="campo estreito">
+      <label for="vagas">Quantas vagas voce quer?</label>
+      <input type="number" id="vagas" name="vagas" min="0" step="1" inputmode="numeric"
+             value="{{ dados.get('vagas', '0') if dados else '0' }}">
+      <p class="ajuda">R$ 250 ja dao direito a duas vagas. Cada vaga alem dessas custa R$ 60.</p>
+    </div>
+  </section>
+
+  <section class="bloco">
+    <h2>Contrato</h2>
+
+    <div class="campo estreito">
+      <label for="parcelas">Em quantas vezes quer dividir o contrato?</label>
+      <select id="parcelas" name="parcelas">
+        {% for n in [1, 2, 3, 4, 5] %}
+          <option value="{{ n }}"
+            {{ 'selected' if dados and dados.get('parcelas') == n|string else ('selected' if not dados and n == 5 else '') }}>
+            {{ n }}x de R$ {{ (2000 / n)|moeda }}
+          </option>
+        {% endfor %}
+      </select>
+      <p class="ajuda">O contrato custa R$ 2.000 e pode ser dividido em ate 5 vezes.</p>
+    </div>
+  </section>
+
+  <div class="acoes">
+    <button type="submit" class="botao botao-principal">Calcular orcamento</button>
+  </div>
+
+</form>
+
+<script>
+  // Mostra os campos que fazem sentido para o tipo escolhido.
+  // Estudio nao tem quartos nem garagem; apartamento e casa nao tem vagas.
+  function ajustarCampos() {
+    var tipo = document.querySelector('input[name="tipo"]:checked');
+    var ehEstudio = tipo && tipo.value === 'estudio';
+    document.getElementById('bloco-quartos').style.display = ehEstudio ? 'none' : '';
+    document.getElementById('bloco-vagas').style.display = ehEstudio ? '' : 'none';
+  }
+
+  document.querySelectorAll('input[name="tipo"]').forEach(function (campo) {
+    campo.addEventListener('change', ajustarCampos);
+  });
+
+  ajustarCampos();
+</script>
+
+{% endblock %}

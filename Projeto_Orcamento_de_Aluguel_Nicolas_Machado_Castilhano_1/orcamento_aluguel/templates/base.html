@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block titulo %}Orcamento de Aluguel{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/estilo.css') }}">
+</head>
+<body>
+
+<header class="cabecalho">
+  <div class="faixa">
+    <a class="logo" href="{{ url_for('inicio') }}">
+      <span class="logo-sigla">RM</span>
+      <span class="logo-nome">Imobiliaria R.M.</span>
+    </a>
+    <p class="logo-apoio">Orcamento de aluguel</p>
+  </div>
+</header>
+
+<main class="conteudo">
+  {% block conteudo %}{% endblock %}
+</main>
+
+<footer class="rodape">
+  <p>Imobiliaria R.M. &middot; Casas, apartamentos e estudios</p>
+</footer>
+
+</body>
+</html>

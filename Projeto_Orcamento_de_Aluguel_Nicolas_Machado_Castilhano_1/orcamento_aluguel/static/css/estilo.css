@@ -1,0 +1,325 @@
+/* ============================================================
+   Orcamento de Aluguel - Imobiliaria R.M.
+   A tela de resultado imita um orcamento impresso: itens
+   alinhados, valor mensal em destaque e a tabela das parcelas.
+   ============================================================ */
+
+:root {
+  --verde:       #17423a;
+  --verde-claro: #2c6055;
+  --papel:       #f5f4f0;
+  --carta:       #ffffff;
+  --linha:       #dedad2;
+  --linha-leve:  #eeebe5;
+  --texto:       #1d2220;
+  --suave:       #6d746f;
+  --alerta:      #a33a2a;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--papel);
+  color: var(--texto);
+  font-family: "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
+  font-size: 15px;
+  line-height: 1.55;
+}
+
+/* ---------- cabecalho ---------- */
+
+.cabecalho { background: var(--verde); color: #fff; }
+
+.faixa {
+  max-width: 820px;
+  margin: 0 auto;
+  padding: 16px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+
+.logo-sigla {
+  background: #fff;
+  color: var(--verde);
+  font-weight: 700;
+  font-size: 13px;
+  padding: 5px 8px;
+  margin-right: 10px;
+  border-radius: 3px;
+}
+
+.logo-nome { color: #fff; font-weight: 600; font-size: 16px; }
+.logo-apoio { margin: 0; color: #a9c4bc; font-size: 14px; }
+
+/* ---------- estrutura ---------- */
+
+.conteudo { max-width: 820px; margin: 0 auto; padding: 32px 24px 56px; }
+
+.intro { margin-bottom: 24px; }
+.intro h1 { font-size: 25px; margin: 0 0 6px; letter-spacing: -0.01em; }
+.intro p { margin: 0; color: var(--suave); max-width: 56ch; }
+
+.cartao {
+  background: var(--carta);
+  border: 1px solid var(--linha);
+  border-radius: 4px;
+  padding: 28px 30px;
+}
+
+.bloco { padding-bottom: 22px; margin-bottom: 22px; border-bottom: 1px solid var(--linha-leve); }
+.bloco:last-of-type { border-bottom: none; margin-bottom: 8px; }
+
+.bloco h2 {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--suave);
+  margin: 0 0 14px;
+}
+
+.rodape {
+  border-top: 1px solid var(--linha);
+  padding: 20px 24px 32px;
+  text-align: center;
+}
+
+.rodape p { margin: 0; color: var(--suave); font-size: 13px; }
+
+/* ---------- formulario ---------- */
+
+.campo { margin-bottom: 16px; }
+.campo:last-child { margin-bottom: 0; }
+.estreito { max-width: 340px; }
+.par { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+
+label { display: block; font-weight: 600; font-size: 14px; margin-bottom: 6px; }
+
+input[type="text"], input[type="number"], select {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #c3c7c3;
+  border-radius: 3px;
+  background: var(--carta);
+  font-family: inherit;
+  font-size: 15px;
+  color: var(--texto);
+}
+
+input[type="number"] { font-variant-numeric: tabular-nums; }
+
+input:focus, select:focus, button:focus-visible, a:focus-visible {
+  outline: 2px solid var(--verde);
+  outline-offset: 1px;
+}
+
+.ajuda { color: var(--suave); font-size: 13px; margin: 6px 0 0; }
+
+/* opcoes em cartao clicavel */
+.escolha { display: grid; gap: 10px; }
+.dupla { grid-template-columns: 1fr 1fr; }
+.tripla { grid-template-columns: 1fr 1fr 1fr; }
+
+.opcao {
+  border: 1px solid #c3c7c3;
+  border-radius: 3px;
+  padding: 12px 14px;
+  margin: 0;
+  cursor: pointer;
+  font-weight: 400;
+}
+
+.opcao span { display: block; font-weight: 600; margin-top: 2px; }
+.opcao small { color: var(--suave); font-size: 12px; }
+.opcao input { width: auto; margin: 0 0 2px; }
+.opcao:hover { border-color: var(--verde-claro); }
+
+.opcao:has(input:checked) {
+  border-color: var(--verde);
+  border-width: 2px;
+  padding: 11px 13px;
+  background: #f4f8f6;
+}
+
+.opcao:has(input:checked) span { color: var(--verde); }
+
+.acoes {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-top: 22px;
+}
+
+.acoes form { margin: 0; }
+
+/* ---------- botoes ---------- */
+
+.botao {
+  display: inline-block;
+  padding: 11px 20px;
+  border: 1px solid #c3c7c3;
+  border-radius: 3px;
+  background: var(--carta);
+  color: var(--texto);
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.botao:hover { background: #f3f3ef; }
+
+.botao-principal {
+  background: var(--verde);
+  border-color: var(--verde);
+  color: #fff;
+}
+
+.botao-principal:hover { background: var(--verde-claro); }
+
+/* ---------- avisos ---------- */
+
+.aviso {
+  background: #fbefec;
+  border-left: 4px solid var(--alerta);
+  color: #7d2c1e;
+  padding: 12px 16px;
+  border-radius: 3px;
+  margin: 0 0 20px;
+  font-size: 14px;
+}
+
+/* ---------- documento do orcamento ---------- */
+
+.doc-topo {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+  padding-bottom: 20px;
+  border-bottom: 2px solid var(--verde);
+}
+
+.doc-rotulo { margin: 0; color: var(--suave); font-size: 13px; }
+.doc-topo h1 { font-size: 24px; margin: 2px 0 4px; letter-spacing: -0.01em; }
+.doc-data { margin: 0; color: var(--suave); font-size: 13px; }
+
+.doc-tipo {
+  background: var(--verde);
+  color: #fff;
+  font-weight: 600;
+  font-size: 14px;
+  padding: 6px 14px;
+  border-radius: 3px;
+  white-space: nowrap;
+}
+
+/* itens do orcamento, com linha pontilhada ligando nome e valor */
+.itens { padding: 20px 0 4px; }
+
+.item {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  padding: 7px 0;
+}
+
+.item-nome { flex-shrink: 0; }
+
+.item::after {
+  content: "";
+  flex-grow: 1;
+  border-bottom: 1px dotted #c9c6bf;
+  margin-bottom: 4px;
+}
+
+.item-valor {
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  white-space: nowrap;
+  order: 3;
+}
+
+.item-desconto .item-nome, .item-desconto .item-valor { color: var(--verde); }
+
+/* valor mensal em destaque */
+.total {
+  margin: 18px 0 0;
+  padding: 20px 0;
+  border-top: 1px solid var(--linha);
+  border-bottom: 1px solid var(--linha);
+}
+
+.total-rotulo { margin: 0; color: var(--suave); font-size: 14px; }
+
+.total-valor {
+  margin: 2px 0 0;
+  font-size: 40px;
+  font-weight: 650;
+  color: var(--verde);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+}
+
+.total-nota { margin: 8px 0 0; color: var(--verde); font-size: 14px; }
+
+.contrato { padding: 22px 0; border-bottom: 1px solid var(--linha-leve); }
+.contrato h2, .parcelas h2 {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--suave);
+  margin: 0 0 10px;
+}
+.contrato p { margin: 0 0 16px; max-width: 60ch; }
+
+.resumo-linhas { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.resumo-linhas div {
+  background: #f6f7f5;
+  border-radius: 3px;
+  padding: 12px 14px;
+}
+.resumo-linhas span { display: block; color: var(--suave); font-size: 13px; }
+.resumo-linhas strong { font-size: 19px; font-variant-numeric: tabular-nums; }
+
+/* tabela das 12 parcelas */
+.parcelas { padding-top: 22px; }
+
+table { width: 100%; border-collapse: collapse; font-size: 14px; }
+
+th {
+  text-align: left;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--suave);
+  padding: 8px 10px;
+  border-bottom: 1px solid var(--linha);
+}
+
+td { padding: 8px 10px; border-bottom: 1px solid var(--linha-leve); }
+tbody tr:last-child td { border-bottom: none; }
+
+.num { text-align: right; font-variant-numeric: tabular-nums; }
+.forte { font-weight: 600; }
+.vazio { color: #b8b5ae; }
+.com-contrato { background: #f7faf8; }
+
+/* ---------- telas menores ---------- */
+
+@media (max-width: 680px) {
+  .conteudo { padding: 24px 16px 40px; }
+  .cartao { padding: 20px 18px; }
+  .par, .dupla, .tripla, .resumo-linhas { grid-template-columns: 1fr; }
+  .doc-topo { flex-direction: column; }
+  .total-valor { font-size: 32px; }
+  .item-nome { flex-shrink: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; animation: none !important; }
+}
